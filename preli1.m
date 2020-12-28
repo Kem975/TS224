@@ -30,6 +30,17 @@ h=freqz(b,a,2*pi*f);
 TF = fftshift(abs(fft(Y,Nfft))).^2/Nfft;
 DSP = abs(h).^2*sigma2;
 
+%% Estimation des Paramètres AR
+
+R = xcorr( Y );
+r = R(N : N+p-1);
+c = R(N : -1 : N-p+1);
+
+Toep = toeplitz( c,r );
+
+estimation_a_i = R(N+1 : N+p) * inv(-Toep);
+norme = norm(estimation_a_i-a_i);
+
 %% Affichage
 
 figure,
